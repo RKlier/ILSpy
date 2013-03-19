@@ -579,6 +579,17 @@ namespace ICSharpCode.ILSpy
 			dlg.Filter = ".NET assemblies|*.dll;*.exe;*.winmd|All files|*.*";
 			dlg.Multiselect = true;
 			dlg.RestoreDirectory = true;
+      if (this.SelectedNodes.Count() == 1)
+      {
+        SharpTreeNode node = this.SelectedNodes.Single();
+        while (!node.IsRoot && !(node is AssemblyTreeNode))
+          node = node.Parent;
+        if (node is AssemblyTreeNode)
+        {
+          AssemblyTreeNode assemblyNode = (AssemblyTreeNode)node;
+          dlg.InitialDirectory = assemblyNode.LoadedAssembly.FileName.Substring(0, assemblyNode.LoadedAssembly.FileName.LastIndexOf('\\'));
+        }
+      }
 			if (dlg.ShowDialog() == true) {
 				OpenFiles(dlg.FileNames);
 			}
